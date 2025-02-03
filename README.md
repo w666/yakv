@@ -1,5 +1,7 @@
 # YAKV - Yet Another Key-Value Store
 
+![Tests Status](https://github.com/w666/yakv/actions/workflows/nodejs.yaml/badge.svg)
+
 YAKV is very simple storage that is designed to solve one simple problem - managing external lock for relational databases.
 Database engines implement locks in some way, but it is quite complex work to manage such locks from distributed applications using connection pools, sometimes existing lock mechanisms are not suitable for modern applications.
 
