@@ -51,7 +51,7 @@ export async function getItem(url: string, key: string): Promise<unknown> {
  */
 export async function putItem(url: string, key: string, obj: unknown, ttl?: number): Promise<unknown> {
     const putUrl = `${url}/${key}${ttl ? '/' + ttl : ''}`;
-    const response = await axios.post(putUrl, obj, {
+    const response = await axios.put(putUrl, obj, {
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
         },

@@ -57,13 +57,13 @@ describe('Storage test', () => {
 
     test('Put new item then get existing item', async () => {
         await request(server.getInstance())
-            .post('/kv/v1/put/key2')
+            .put('/kv/v1/put/key2')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(201)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: true });
+                expect(apiResp).toEqual({ created: true });
             });
         await request(server.getInstance())
             .get('/kv/v1/get/key2')
@@ -77,13 +77,13 @@ describe('Storage test', () => {
 
     test('Put new item with TTL', async () => {
         await request(server.getInstance())
-            .post('/kv/v1/put/key60000/60000')
+            .put('/kv/v1/put/key60000/60000')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(201)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: true });
+                expect(apiResp).toEqual({ created: true });
             });
     });
 
@@ -93,13 +93,13 @@ describe('Storage test', () => {
         await sleep(101);
 
         await request(server.getInstance())
-            .post('/kv/v1/put/keyThatShouldExpire/60000')
+            .put('/kv/v1/put/keyThatShouldExpire/60000')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(201)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: true });
+                expect(apiResp).toEqual({ created: true });
             });
     });
 
@@ -107,19 +107,19 @@ describe('Storage test', () => {
         await putItem(urlPut, 'keyNotExpired', { test: 'test' }, 10000);
 
         await request(server.getInstance())
-            .post('/kv/v1/put/keyNotExpired/60000')
+            .put('/kv/v1/put/keyNotExpired/60000')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(432)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: false });
+                expect(apiResp).toEqual({ created: false });
             });
     });
 
     test('Fails to put new item with invalid TTL', async () => {
         await request(server.getInstance())
-            .post('/kv/v1/put/key1/123Boom')
+            .put('/kv/v1/put/key1/123Boom')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(400)

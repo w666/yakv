@@ -3,7 +3,7 @@ export type GetResponse = {
 };
 
 export type PutResponse = {
-    putResult: boolean;
+    created: boolean;
 };
 
 export type InvalidRequestError = {

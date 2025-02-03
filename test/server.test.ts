@@ -32,13 +32,13 @@ describe('Storage test', () => {
         await putItem(urlPut, 'key1', { item1: 1 }, 1000);
         await putItem(urlPut, 'key2', { item1: 2 }, 1000);
         await request(urlPut)
-            .post('/key3/1000')
+            .put('/key3/1000')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(432)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: false });
+                expect(apiResp).toEqual({ created: false });
             });
 
         expect(await getHealth(urlHealth)).toEqual({
@@ -66,13 +66,13 @@ describe('Storage test', () => {
         await putItem(urlPut, 'key1', { item1: 1 });
         await sleep(11);
         await request(urlPut)
-            .post('/key1')
+            .put('/key1')
             .send({ item1: 1, item2: 'two' })
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(201)
             .then((res: Response) => {
                 const apiResp: PutResponse = res.body;
-                expect(apiResp).toEqual({ putResult: true });
+                expect(apiResp).toEqual({ created: true });
             });
 
         expect(await getHealth(urlHealth)).toEqual({

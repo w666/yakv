@@ -18,7 +18,7 @@ class KVServer {
     }
 
     private handlePutResponse(res: Response, putRes: PutResponse) {
-        if (putRes.putResult) {
+        if (putRes.created) {
             console.log(`return 1`);
             res.status(201).json(putRes);
             return;
@@ -66,14 +66,14 @@ class KVServer {
             res.json(getResp);
         });
 
-        this.app.route('/kv/v1/put/:key').post((req, res: Response) => {
+        this.app.route('/kv/v1/put/:key').put((req, res: Response) => {
             const putResp: PutResponse = {
-                putResult: this.store.set(req.params.key, req.body),
+                created: this.store.set(req.params.key, req.body),
             };
             this.handlePutResponse(res, putResp);
         });
 
-        this.app.route('/kv/v1/put/:key/:ttl').post((req, res: Response) => {
+        this.app.route('/kv/v1/put/:key/:ttl').put((req, res: Response) => {
             const ttl = Number(req.params.ttl);
 
             if (isNaN(ttl)) {
@@ -85,7 +85,7 @@ class KVServer {
             }
 
             const putResp: PutResponse = {
-                putResult: this.store.set(req.params.key, req.body, ttl),
+                created: this.store.set(req.params.key, req.body, ttl),
             };
 
             this.handlePutResponse(res, putResp);
@@ -96,8 +96,7 @@ class KVServer {
         this.registerRoutes();
         this.server = this.app.listen(this.port);
         console.log(
-            `Server version ${process.env['npm_package_version']} started on port ${
-                (this.server.address() as AddressInfo)?.port
+            `Server version ${process.env['npm_package_version']} started on port ${(this.server.address() as AddressInfo)?.port
             }`,
         );
     }
