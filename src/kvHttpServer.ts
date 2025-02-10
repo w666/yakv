@@ -58,12 +58,7 @@ class KVServer {
             const getResp: GetResponse = {
                 data: this.store.get(key) || null,
             };
-            if (getResp.data) {
-                res.status(200).json(getResp);
-                return;
-            }
             res.status(200).json(getResp);
-            res.json(getResp);
         });
 
         this.app.route('/kv/v1/put/:key').put((req, res: Response) => {
@@ -96,7 +91,8 @@ class KVServer {
         this.registerRoutes();
         this.server = this.app.listen(this.port);
         console.log(
-            `Server version ${process.env['npm_package_version']} started on port ${(this.server.address() as AddressInfo)?.port
+            `Server version ${process.env['npm_package_version']} started on port ${
+                (this.server.address() as AddressInfo)?.port
             }`,
         );
     }
@@ -121,6 +117,10 @@ class KVServer {
 
     public getInstance() {
         return this.app;
+    }
+
+    public cleanUp() {
+        this.store.cleanUp();
     }
 }
 

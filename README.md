@@ -46,7 +46,7 @@ YAKV consists of two modules:
 
 `defaultTTL`: Optional. TTL for values if not set on create. Default value is 60000. Value is in milliseconds.
 
-### Create New Storage
+### Create Storage
 
 To create new storage with default parameters
 
@@ -124,7 +124,59 @@ store.cleanUp();
 
 ## HTTP Server
 
-TODO
+When new instance is created it also creates in-memory storage with the same parameters passed to HTTP server.
+
+### Parameters
+
+`maxStorageSize`: Optional. Max number of key/values. Default value is 1000000.
+
+`defaultTTL`: Optional. TTL for values if not set on create. Default value is 60000. Value is in milliseconds.
+
+`port`: Optional. Port to listen to. Default value is 8080.
+
+### Create And Start Server
+
+To create new storage with default parameters
+
+```typescript
+const server = new KVServer();
+```
+
+Once server is created it can be started, so it will start listening for requests
+
+```typescript
+server.start();
+```
+
+Some parameters can be passed to change server defaults, as per example below server is created with storage size `10`, `10` seconds TTL and will be listening on port `8081`.
+
+```typescript
+const server = new KVServer(10, 10000, 8081);
+```
+
+### Stop Server
+
+In cases when server should be gracefully stopped it has async `stop` method
+
+```typescript
+await server.stop();
+```
+
+### Internal Express Instance
+
+There is a `getinstance` method to get access to internal express instance
+
+```typescript
+server.getInstance();
+```
+
+### Delete Expired Values
+
+There is a `crealUp` method to delete expired values from internal storage, it basically executes `cleanUp` against internal storage instance.
+
+```typescript
+server.cleanUp();
+```
 
 ## RESTful API
 

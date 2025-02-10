@@ -131,4 +131,12 @@ describe('Storage test', () => {
                 });
             });
     });
+
+    test('Cleanup expired item', async () => {
+        await putItem(urlPut, 'keyToExpire', { item1: 1, item2: 'two' }, 100);
+        await sleep(110);
+        server.cleanUp();
+        const resp = await getItem(urlGet, 'keyToExpire');
+        expect(resp).toEqual({ data: null });
+    });
 });
