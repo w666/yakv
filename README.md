@@ -1,5 +1,6 @@
 # YAKV - Yet Another Key-Value Store
 
+![NPM Version](https://img.shields.io/npm/v/:yakv)
 ![Tests Status](https://github.com/w666/yakv/actions/workflows/nodejs.yaml/badge.svg)
 
 YAKV is very simple storage that is designed to solve one simple problem - managing external lock for relational databases.
