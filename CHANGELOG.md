@@ -1,3 +1,8 @@
+1.0.4
+
+-   [MAINTENANCE]: Update dependencies
+-   [DOC]: Improve Readme
+
 1.0.3
 
 -   [MAINTENANCE]: Update dependencies
