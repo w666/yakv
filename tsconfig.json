@@ -30,6 +30,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "allowUnusedLabels": true,
     "allowUnreachableCode": true,
+    "isolatedModules": true
   },
   "include": [
     "./src/**/*",

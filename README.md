@@ -3,7 +3,7 @@
 ![NPM Version](https://img.shields.io/npm/v/yakv)
 ![Tests Status](https://github.com/w666/yakv/actions/workflows/nodejs.yaml/badge.svg)
 
-YAKV is very simple storage that can be used inside our application or as a standalone redis-like storage.
+YAKV is very simple storage that can be used inside application or as a standalone redis-like storage.
 
 YAKV consists of two modules:
 
@@ -128,15 +128,15 @@ When new instance is created it also creates in-memory storage with the same par
 
 ### Parameters
 
-`maxStorageSize`: Optional. Max number of key/values. Default value is 1000000.
+`maxStorageSize`: (_Optional_) Max number of key/values. Default value is 1000000.
 
-`defaultTTL`: Optional. TTL for values if not set on create. Default value is 60000. Value is in milliseconds.
+`defaultTTL`: (_Optional_) TTL for values if not set on create. Default value is 60000. Value is in milliseconds.
 
-`port`: Optional. Port to listen to. Default value is 8080.
+`port`: (_Optional_) Port for a RESTful API server. Default value is 8080.
 
 ### Create And Start Server
 
-To create new storage with default parameters
+To create new storage with default parameters:
 
 ```typescript
 const server = new KVServer();
@@ -148,15 +148,18 @@ Once server is created it can be started, so it will start listening for request
 server.start();
 ```
 
-Some parameters can be passed to change server defaults, as per example below server is created with storage size `10`, `10` seconds TTL and will be listening on port `8081`.
+Some parameters can be passed to change server defaults, as per example below server is created with a storage size `10`, `10` seconds TTL and will be listening on port `8081`.
+
+````typescript
+To create a new storage with the maximum storage size of 10, a default TTL of 10 seconds, and to listen on port 8081:
 
 ```typescript
 const server = new KVServer(10, 10000, 8081);
-```
+````
 
 ### Stop Server
 
-In cases when server should be gracefully stopped it has async `stop` method
+In cases when a server should be gracefully stopped it has async `stop` method
 
 ```typescript
 await server.stop();
@@ -164,7 +167,7 @@ await server.stop();
 
 ### Internal Express Instance
 
-There is a `getinstance` method to get access to internal express instance
+There is a `getinstance` method to get access to the express instance
 
 ```typescript
 server.getInstance();
@@ -172,7 +175,7 @@ server.getInstance();
 
 ### Delete Expired Values
 
-There is a `crealUp` method to delete expired values from internal storage, it basically executes `cleanUp` against internal storage instance.
+There is a `cleanUp` method that can be called to clean up expired items when used as an in-memory storage.
 
 ```typescript
 server.cleanUp();
