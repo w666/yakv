@@ -1,3 +1,5 @@
+import { Logger } from './logger';
+
 type StorageData = {
     expireAt: number;
     data: unknown;
@@ -8,10 +10,13 @@ class KVStore {
     private maxStorageSize: number;
     private defaultTTL: number;
 
+    private log: Logger;
+
     constructor(maxStorageSize = 1000000, defaultTTL = 60000) {
         this.maxStorageSize = maxStorageSize;
         this.defaultTTL = defaultTTL;
         this.store = new Map();
+        this.log = new Logger();
     }
 
     public cleanUp = () => {
@@ -31,7 +36,7 @@ class KVStore {
 
     public set(key: string | number, value: unknown, ttl?: number): boolean {
         if (typeof key !== 'string' && typeof key !== 'number') {
-            console.error(`Invalid key type '${typeof key}', must be string or number`);
+            this.log.error(`Invalid key type '${typeof key}', must be string or number`);
             return false;
         }
 
@@ -39,7 +44,7 @@ class KVStore {
         if (this.store.has(key)) {
             const i = this.store.get(key);
             if (i && i.expireAt > timeNow) {
-                console.debug(`Can't replace key '${key}', it will expire in ${i.expireAt - timeNow} ms`);
+                this.log.debug(`Can't replace key '${key}', it will expire in ${i.expireAt - timeNow} ms`);
                 return false;
             }
 
@@ -48,11 +53,11 @@ class KVStore {
         }
 
         if (this.store.size >= this.maxStorageSize) {
-            console.warn(`Storage is full (${this.store.size})), cleaning up`);
+            this.log.warn(`Storage is full (${this.store.size})), cleaning up`);
             this.cleanUp();
 
             if (this.store.size >= this.maxStorageSize) {
-                console.warn(`Storage is full after cleanup (${this.store.size}), can't add more items`);
+                this.log.warn(`Storage is full after cleanup (${this.store.size}), can't add more items`);
                 return false;
             }
         }
