@@ -1,3 +1,8 @@
+1.0.5
+
+-   [IMPROVEMENT]: Add simple logger to kv store
+-   [MAINTENANCE]: Update dev deps, use node 22 in github pipeline
+
 1.0.4
 
 -   [MAINTENANCE]: Update dependencies
