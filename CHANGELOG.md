@@ -1,3 +1,8 @@
+1.1.0
+
+-   [IMPROVEMENT]: Add clean up task to HTTP server to periodically delete expired key/values
+-   [IMPROVEMENT]: Add prefix to Logger
+
 1.0.5
 
 -   [IMPROVEMENT]: Add simple logger to kv store
