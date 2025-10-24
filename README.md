@@ -124,7 +124,7 @@ store.cleanUp();
 
 ## HTTP Server
 
-When new instance is created it also creates in-memory storage with the same parameters passed to HTTP server.
+When new instance is created it also creates in-memory storage with the same parameters passed to the HTTP server.
 
 ### Parameters
 
@@ -179,6 +179,28 @@ There is a `cleanUp` method that can be called to clean up expired items when us
 
 ```typescript
 server.cleanUp();
+```
+
+### Clean Up Task
+
+Server can start internal clean up task to periodically delete expired key/value pairs.
+
+To start clean up task with the default interval (30 seconds)
+
+```typescript
+server.startCleanupTask();
+```
+
+To start clean up task with the custom interval (in milliseconds)
+
+```typescript
+server.startCleanupTask(2000);
+```
+
+To stop task
+
+```typescript
+server.stopCleanupTask();
 ```
 
 ## RESTful API

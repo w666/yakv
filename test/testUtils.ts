@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 /**
  * Await for specified amount of time
@@ -16,7 +16,7 @@ export const sleep = async (timeout: number) => {
  */
 export const retryAssertEqual = async (func: () => unknown, expectedValue: unknown, timeout = 5000) => {
     const startedAt = Date.now();
-    let error: Error = new Error(`Retry did not run`);
+    let error = `Retry did not run`;
     while (startedAt + timeout > Date.now()) {
         try {
             const actualValue = await func();
@@ -24,13 +24,13 @@ export const retryAssertEqual = async (func: () => unknown, expectedValue: unkno
             console.warn(`Assertion succeeded after ${Date.now() - startedAt} ms`);
             return;
         } catch (err: unknown) {
-            error = err instanceof Error ? err : new Error(`Unknown  error`);
-            console.warn(`Assert failed, re-trying`, err);
+            error = getErrorMessage(err);
+            console.warn(`Assert failed, re-trying`, getErrorMessage(err));
             await sleep(100);
         }
     }
     console.warn(`Assertion failed after ${Date.now() - startedAt} ms`);
-    throw error;
+    throw new Error(error);
 };
 
 /**
@@ -67,4 +67,18 @@ export async function putItem(url: string, key: string, obj: unknown, ttl?: numb
 export async function getHealth(url: string): Promise<unknown> {
     const response = await axios.get(url, { timeout: 100 });
     return response.data;
+}
+
+export function getErrorMessage(err: unknown): string {
+    if (isAxiosError(err)) {
+        if (err.response?.data) {
+            return `${err.code}: ${err.response.data}`;
+        }
+        return err.message;
+    }
+    if (err instanceof Error) {
+        return err.message;
+    }
+
+    return `Unknown error`;
 }

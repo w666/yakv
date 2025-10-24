@@ -3,27 +3,34 @@ import http from 'http';
 import KVStore from './kvStore';
 import { GetResponse, InvalidRequestError, PutResponse, Stats } from './types';
 import { AddressInfo } from 'net';
+import { Logger } from './logger';
 
 class KVServer {
     private port: number;
     private app;
     private server: http.Server | null;
     private store: KVStore;
+    private log: Logger;
+    private cleanupInterval: number;
+    private cleanupTaskId: NodeJS.Timeout | null;
+    private isCleanupRunning: boolean;
 
     constructor(maxStorageSize = 1000000, defaultTTL = 60000, port = 8080) {
         this.port = port;
         this.app = express();
         this.server = null;
         this.store = new KVStore(maxStorageSize, defaultTTL);
+        this.log = new Logger({ loggerName: 'KVServer' });
+        this.cleanupInterval = 30000;
+        this.cleanupTaskId = null;
+        this.isCleanupRunning = false;
     }
 
     private handlePutResponse(res: Response, putRes: PutResponse) {
         if (putRes.created) {
-            console.log(`return 1`);
             res.status(201).json(putRes);
             return;
         }
-        console.log(`return 2`);
         res.status(432).json(putRes);
     }
 
@@ -90,7 +97,7 @@ class KVServer {
     public start() {
         this.registerRoutes();
         this.server = this.app.listen(this.port);
-        console.log(
+        this.log.info(
             `Server version ${process.env['npm_package_version']} started on port ${
                 (this.server.address() as AddressInfo)?.port
             }`,
@@ -98,12 +105,16 @@ class KVServer {
     }
 
     public async stop() {
+        if (this.isCleanupRunning && this.cleanupTaskId) {
+            clearInterval(this.cleanupTaskId);
+        }
+
         if (this.server) {
             let isClosed = false;
 
             this.server.close((err: unknown) => {
                 if (err) {
-                    console.log(`Failed to stop server`, err);
+                    this.log.error(`Failed to stop server`, err);
                 }
                 isClosed = true;
             });
@@ -121,6 +132,32 @@ class KVServer {
 
     public cleanUp() {
         this.store.cleanUp();
+    }
+
+    /**
+     * Start cleanup task
+     * @param interval if not provided default interval is 30 seconds
+     */
+    public startCleanupTask(interval?: number) {
+        this.cleanupTaskId = setInterval(() => {
+            if (!this.isCleanupRunning) {
+                this.isCleanupRunning = true;
+                try {
+                    this.store.cleanUp();
+                } finally {
+                    this.isCleanupRunning = false;
+                }
+            }
+        }, interval || this.cleanupInterval);
+        this.log.debug(`Cleanup task started`, this.cleanupTaskId);
+    }
+
+    public stopCleanupTask() {
+        if (this.cleanupTaskId) {
+            clearInterval(this.cleanupTaskId);
+            this.log.debug(`Cleanup task stopped`, this.cleanupTaskId);
+            this.cleanupTaskId = null;
+        }
     }
 }
 

@@ -16,7 +16,7 @@ class KVStore {
         this.maxStorageSize = maxStorageSize;
         this.defaultTTL = defaultTTL;
         this.store = new Map();
-        this.log = new Logger();
+        this.log = new Logger({ loggerName: 'KVStore' });
     }
 
     public cleanUp = () => {

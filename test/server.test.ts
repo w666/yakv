@@ -4,7 +4,7 @@ import { getHealth, getItem, putItem, retryAssertEqual, sleep } from './testUtil
 import request, { Response } from 'supertest';
 
 describe('Storage test', () => {
-    let server: KVServer;
+    let server: KVServer | null = null;
 
     const defaultPort = 8080;
     const nonDefaultPort = 8081;
@@ -18,7 +18,8 @@ describe('Storage test', () => {
     const urlHealth = `http://localhost:${nonDefaultPort}/kv/v1/health`;
 
     afterEach(async () => {
-        server.stop();
+        if (server) await server.stop();
+        server = null;
     });
 
     test('Can override default max storage size', async () => {
@@ -133,6 +134,45 @@ describe('Storage test', () => {
         const resp = await getItem(urlGetDefault, 'key1');
         expect(resp).toEqual({ data: { item1: 1 } });
         expect(await getHealth(urlHealthDefault)).toEqual({
+            defaultTTL: 60000,
+            maxStorageSize: 1000000,
+            storageUsed: 1,
+        });
+    });
+
+    test('Can start cleanup task and remove expired items', async () => {
+        server = new KVServer();
+        server.start();
+        await retryAssertEqual(() => getHealth(urlHealthDefault), {
+            defaultTTL: 60000,
+            maxStorageSize: 1000000,
+            storageUsed: 0,
+        });
+        await putItem(urlPutDefault, 'key1', { item1: 1 }, 100);
+
+        await retryAssertEqual(() => getHealth(urlHealthDefault), {
+            defaultTTL: 60000,
+            maxStorageSize: 1000000,
+            storageUsed: 1,
+        });
+
+        server.startCleanupTask(100);
+
+        // should delete expired item
+        await retryAssertEqual(() => getHealth(urlHealthDefault), {
+            defaultTTL: 60000,
+            maxStorageSize: 1000000,
+            storageUsed: 0,
+        });
+
+        server.stopCleanupTask();
+
+        await putItem(urlPutDefault, 'key2', { item2: 2 }, 10);
+
+        await sleep(100);
+
+        // expired item should not be deleted
+        await retryAssertEqual(() => getHealth(urlHealthDefault), {
             defaultTTL: 60000,
             maxStorageSize: 1000000,
             storageUsed: 1,

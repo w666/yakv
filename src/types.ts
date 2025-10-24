@@ -16,3 +16,7 @@ export type Stats = {
     maxStorageSize: number;
     storageUsed: number;
 };
+
+export type LoggerOptions = {
+    loggerName: string;
+};

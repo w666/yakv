@@ -1,25 +1,29 @@
+import { LoggerOptions } from './types';
+
 export class Logger {
     private isDebug: boolean;
+    private prefix: string;
 
-    constructor() {
+    constructor(options: LoggerOptions) {
         this.isDebug = process.env['LOG_LEVEL'] === 'debug';
+        this.prefix = options.loggerName;
     }
 
     public debug(...args: unknown[]) {
         if (this.isDebug) {
-            console.debug(args);
+            console.debug(`[${this.prefix}]`, args);
         }
     }
 
     public info(...args: unknown[]) {
-        console.log(args);
+        console.log(`[${this.prefix}]`, args);
     }
 
     public warn(...args: unknown[]) {
-        console.warn(args);
+        console.warn(`[${this.prefix}]`, args);
     }
 
     public error(...args: unknown[]) {
-        console.error(args);
+        console.error(`[${this.prefix}]`, args);
     }
 }
