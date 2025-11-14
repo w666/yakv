@@ -150,12 +150,11 @@ server.start();
 
 Some parameters can be passed to change server defaults, as per example below server is created with a storage size `10`, `10` seconds TTL and will be listening on port `8081`.
 
-````typescript
 To create a new storage with the maximum storage size of 10, a default TTL of 10 seconds, and to listen on port 8081:
 
 ```typescript
 const server = new KVServer(10, 10000, 8081);
-````
+```
 
 ### Stop Server
 
