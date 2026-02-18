@@ -1,3 +1,7 @@
+1.1.1
+
+-   [MAINTENANCE]: Bump all deps
+
 1.1.0
 
 -   [IMPROVEMENT]: Add clean up task to HTTP server to periodically delete expired key/values
