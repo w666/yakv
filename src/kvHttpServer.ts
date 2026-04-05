@@ -11,19 +11,14 @@ class KVServer {
     private server: http.Server | null;
     private store: KVStore;
     private log: Logger;
-    private cleanupInterval: number;
-    private cleanupTaskId: NodeJS.Timeout | null;
-    private isCleanupRunning: boolean;
 
-    constructor(maxStorageSize = 1000000, defaultTTL = 60000, port = 8080) {
+
+    constructor(maxStorageSize = 1000000, defaultTTL = 60000, port = 8080, cleanupInterval = 30000) {
         this.port = port;
         this.app = express();
         this.server = null;
-        this.store = new KVStore(maxStorageSize, defaultTTL);
+        this.store = new KVStore(maxStorageSize, defaultTTL, cleanupInterval);
         this.log = new Logger({ loggerName: 'KVServer' });
-        this.cleanupInterval = 30000;
-        this.cleanupTaskId = null;
-        this.isCleanupRunning = false;
     }
 
     private handlePutResponse(res: Response, putRes: PutResponse) {
@@ -98,16 +93,13 @@ class KVServer {
         this.registerRoutes();
         this.server = this.app.listen(this.port);
         this.log.info(
-            `Server version ${process.env['npm_package_version']} started on port ${
-                (this.server.address() as AddressInfo)?.port
+            `Server version ${process.env['npm_package_version']} started on port ${(this.server.address() as AddressInfo)?.port
             }`,
         );
     }
 
     public async stop() {
-        if (this.isCleanupRunning && this.cleanupTaskId) {
-            clearInterval(this.cleanupTaskId);
-        }
+        this.store.stopCleanupTask();
 
         if (this.server) {
             let isClosed = false;
@@ -139,25 +131,11 @@ class KVServer {
      * @param interval if not provided default interval is 30 seconds
      */
     public startCleanupTask(interval?: number) {
-        this.cleanupTaskId = setInterval(() => {
-            if (!this.isCleanupRunning) {
-                this.isCleanupRunning = true;
-                try {
-                    this.store.cleanUp();
-                } finally {
-                    this.isCleanupRunning = false;
-                }
-            }
-        }, interval || this.cleanupInterval);
-        this.log.debug(`Cleanup task started`, this.cleanupTaskId);
+        this.store.startCleanupTask(interval);
     }
 
     public stopCleanupTask() {
-        if (this.cleanupTaskId) {
-            clearInterval(this.cleanupTaskId);
-            this.log.debug(`Cleanup task stopped`, this.cleanupTaskId);
-            this.cleanupTaskId = null;
-        }
+        this.store.stopCleanupTask();
     }
 }
 

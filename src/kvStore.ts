@@ -11,12 +11,18 @@ class KVStore {
     private defaultTTL: number;
 
     private log: Logger;
+    private cleanupInterval: number;
+    private cleanupTaskId: NodeJS.Timeout | null;
+    private isCleanupRunning: boolean;
 
-    constructor(maxStorageSize = 1000000, defaultTTL = 60000) {
+    constructor(maxStorageSize = 1000000, defaultTTL = 60000, cleanupInterval = 30000) {
         this.maxStorageSize = maxStorageSize;
         this.defaultTTL = defaultTTL;
         this.store = new Map();
         this.log = new Logger({ loggerName: 'KVStore' });
+        this.cleanupInterval = cleanupInterval;
+        this.cleanupTaskId = null;
+        this.isCleanupRunning = false;
     }
 
     public cleanUp = () => {
@@ -88,6 +94,32 @@ class KVStore {
 
     public getDefaultTTL(): number {
         return this.defaultTTL;
+    }
+
+    /**
+     * Start cleanup task
+     * @param interval if not provided default interval is 30 seconds
+     */
+    public startCleanupTask(interval?: number) {
+        this.cleanupTaskId = setInterval(() => {
+            if (!this.isCleanupRunning) {
+                this.isCleanupRunning = true;
+                try {
+                    this.cleanUp();
+                } finally {
+                    this.isCleanupRunning = false;
+                }
+            }
+        }, interval || this.cleanupInterval);
+        this.log.debug(`Cleanup task started`, this.cleanupTaskId);
+    }
+
+    public stopCleanupTask() {
+        if (this.cleanupTaskId) {
+            clearInterval(this.cleanupTaskId);
+            this.log.debug(`Cleanup task stopped`, this.cleanupTaskId);
+            this.cleanupTaskId = null;
+        }
     }
 }
 

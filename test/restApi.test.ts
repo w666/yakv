@@ -17,8 +17,8 @@ describe('Storage test', () => {
         server.start();
     });
 
-    afterAll(() => {
-        server.stop();
+    afterAll(async () => {
+        await server.stop();
     });
 
     test('Get item that does not exist', async () => {
