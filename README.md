@@ -2,42 +2,42 @@
 
 ![NPM Version](https://img.shields.io/npm/v/yakv)
 ![Tests Status](https://github.com/w666/yakv/actions/workflows/nodejs.yaml/badge.svg)
-![Coverage](https://codecov.io/gh/w666/yakv/graph/badge.svg)
 
 YAKV is very simple storage that can be used inside application or as a standalone redis-like server with RESTful API.
 
 There are two modules:
 
--   KV storage that can be used as a local in-memory store
--   Web server to access KV storage over RESTful API
+- KV storage that can be used as a local in-memory store
+- Web server to access KV storage over RESTful API
 
 ## Table of Contents
 
--   [Features](#features)
--   [Local Storage](#local-storage)
-    -   [Parameters](#parameters)
-    -   [Create New Storage](#create-new-storage)
-    -   [Add Value](#add-value)
-    -   [Get Value](#get-value)
-    -   [Get Current Storage Size](#get-current-storage-size)
-    -   [Get Max Storage Size](#get-max-storage-size)
-    -   [Get Default TTL](#get-default-ttl)
-    -   [Delete Expired Values](#delete-expired-values)
--   [HTTP Server](#http-server)
--   [RESTful API](#restful-api)
-    -   [Health](#health)
-    -   [Read Value](#read-value)
-    -   [Add Value](#add-value-1)
-    -   [Add Value With TTL](#add-value-with-ttl)
+- [Features](#features)
+- [Local Storage](#local-storage)
+    - [Parameters](#parameters)
+    - [Create New Storage](#create-new-storage)
+    - [Add Value](#add-value)
+    - [Get Value](#get-value)
+    - [Get Current Storage Size](#get-current-storage-size)
+    - [Get Max Storage Size](#get-max-storage-size)
+    - [Get Default TTL](#get-default-ttl)
+    - [Delete Expired Values](#delete-expired-values)
+- [HTTP Server](#http-server)
+- [RESTful API](#restful-api)
+    - [Health](#health)
+    - [Read Value](#read-value)
+    - [Add Value](#add-value-1)
+    - [Add Value With TTL](#add-value-with-ttl)
 
 ## Features
 
--   Keys can be strings or number
--   Value can be anything
--   Global TTL (expire time)
--   Per-key TTL (expire time)
--   RESTful API
--   Key can't be replaced until expired
+- Keys can be strings or number
+- Value can be anything
+- Global TTL (expire time)
+- Per-key TTL (expire time)
+- RESTful API
+- Key can't be replaced until expired
+- Automatic cleanup (optional)
 
 ## Local Storage
 
