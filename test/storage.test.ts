@@ -136,4 +136,42 @@ describe('Storage test', () => {
         expect(res2).toEqual(true);
         expect(store.get('key1')).toEqual('test');
     });
+
+    test('Can start cleanup task and remove expired items', async () => {
+        const store = new KVStore(1, 50, 10);
+        store.startCleanupTask();
+
+        try {
+            const res1 = store.set('key1', 'test');
+            expect(res1).toEqual(true);
+            expect(store.get('key1')).toEqual('test');
+            expect(store.getSize()).toEqual(1);
+
+            await sleep(100);
+
+            expect(store.get('key1')).toEqual(undefined);
+            expect(store.getSize()).toEqual(0);
+        } finally {
+            store.stopCleanupTask()
+        }
+    });
+
+    test('Can start cleanup task and does not remove items if not expired', async () => {
+        const store = new KVStore(1, 1000, 10);
+        store.startCleanupTask();
+
+        try {
+            const res1 = store.set('key1', 'test');
+            expect(res1).toEqual(true);
+            expect(store.get('key1')).toEqual('test');
+            expect(store.getSize()).toEqual(1);
+
+            await sleep(50);
+
+            expect(store.get('key1')).toEqual('test');
+            expect(store.getSize()).toEqual(1);
+        } finally {
+            store.stopCleanupTask()
+        }
+    });
 });

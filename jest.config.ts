@@ -6,6 +6,7 @@ const config: Config = {
     transform: {
         '^.+.tsx?$': ['ts-jest', {}],
     },
+    coverageReporters: ['json-summary', 'lcov', 'text', 'clover'],
     maxWorkers: 1,
 };
 

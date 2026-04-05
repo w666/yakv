@@ -2,10 +2,11 @@
 
 ![NPM Version](https://img.shields.io/npm/v/yakv)
 ![Tests Status](https://github.com/w666/yakv/actions/workflows/nodejs.yaml/badge.svg)
+![Coverage](https://codecov.io/gh/w666/yakv/graph/badge.svg)
 
-YAKV is very simple storage that can be used inside application or as a standalone redis-like storage.
+YAKV is very simple storage that can be used inside application or as a standalone redis-like server with RESTful API.
 
-YAKV consists of two modules:
+There are two modules:
 
 -   KV storage that can be used as a local in-memory store
 -   Web server to access KV storage over RESTful API
@@ -45,6 +46,8 @@ YAKV consists of two modules:
 `maxStorageSize`: Optional. Max number of key/values. Default value is 1000000.
 
 `defaultTTL`: Optional. TTL for values if not set on create. Default value is 60000. Value is in milliseconds.
+
+`cleanupInterval`: _Optional_. Interval for storage cleanup task. Default value is 30000. Value is in milliseconds.
 
 ### Create Storage
 
@@ -120,6 +123,22 @@ store.getDefaultTTL(); // returns 5000
 ```typescript
 const store = new KVStore();
 store.cleanUp();
+```
+
+### Clean Up Task
+
+Storage can start internal clean up task to periodically delete expired key/value pairs.
+
+To start clean up task with the default interval (30 seconds)
+
+```typescript
+store.startCleanupTask();
+```
+
+To start clean up task with the custom interval (in milliseconds)
+
+```typescript
+store.startCleanupTask(2000);
 ```
 
 ## HTTP Server
