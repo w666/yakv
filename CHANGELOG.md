@@ -1,3 +1,8 @@
+1.2.0
+
+-   [FEATURE]: Move cleanup task feature from server to storage
+-   [MAINTENANCE]: Resolve security issues
+
 1.1.1
 
 -   [MAINTENANCE]: Bump all deps
