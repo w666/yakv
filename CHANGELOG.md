@@ -1,37 +1,41 @@
-1.2.0
+# 1.2.1
 
--   [FEATURE]: Move cleanup task feature from server to storage
--   [MAINTENANCE]: Resolve security issues
+- [MAINTENANCE]: Update deps and resolve security issues
 
-1.1.1
+# 1.2.0
 
--   [MAINTENANCE]: Bump all deps
+- [FEATURE]: Move cleanup task feature from server to storage
+- [MAINTENANCE]: Resolve security issues
 
-1.1.0
+# 1.1.1
 
--   [IMPROVEMENT]: Add clean up task to HTTP server to periodically delete expired key/values
--   [IMPROVEMENT]: Add prefix to Logger
+- [MAINTENANCE]: Bump all deps
 
-1.0.5
+# 1.1.0
 
--   [IMPROVEMENT]: Add simple logger to kv store
--   [MAINTENANCE]: Update dev deps, use node 22 in github pipeline
+- [IMPROVEMENT]: Add clean up task to HTTP server to periodically delete expired key/values
+- [IMPROVEMENT]: Add prefix to Logger
 
-1.0.4
+# 1.0.5
 
--   [MAINTENANCE]: Update dependencies
--   [DOC]: Improve Readme
+- [IMPROVEMENT]: Add simple logger to kv store
+- [MAINTENANCE]: Update dev deps, use node 22 in github pipeline
 
-1.0.3
+# 1.0.4
 
--   [MAINTENANCE]: Update dependencies
--   [DOC]: Simplify README
+- [MAINTENANCE]: Update dependencies
+- [DOC]: Improve Readme
 
-1.0.1
+# 1.0.3
 
--   [FEATURE]: Add `cleanUp` function to HTTP server to delete expired key/values from internal storage
--   [DOC]: Add missing documentation about HTTP server
+- [MAINTENANCE]: Update dependencies
+- [DOC]: Simplify README
 
-1.0.0
+# 1.0.1
 
--   initial release
+- [FEATURE]: Add `cleanUp` function to HTTP server to delete expired key/values from internal storage
+- [DOC]: Add missing documentation about HTTP server
+
+# 1.0.0
+
+- initial release
