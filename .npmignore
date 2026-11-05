@@ -1,6 +1,6 @@
 test
 coverage
-src
+/src
 tsconfig.json
 .prettierrc
 .github
