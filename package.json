@@ -1,6 +1,6 @@
 {
     "name": "yakv",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Yet another lightweight in-memory key-value storage",
     "main": "index.js",
     "scripts": {

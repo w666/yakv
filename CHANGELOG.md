@@ -1,3 +1,9 @@
+# 1.2.2
+
+- [FIX]: Include compiled files to package
+- [FIX]: Exclude source maps and test files
+- [MAINTENANCE] Npm audit
+
 # 1.2.1
 
 - [MAINTENANCE]: Update deps and resolve security issues
