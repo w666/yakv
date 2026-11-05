@@ -6,3 +6,4 @@ tsconfig.json
 .github
 jest*
 testServer.ts
+test-perf
